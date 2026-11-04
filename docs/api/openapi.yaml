@@ -1,0 +1,346 @@
+openapi: 3.1.0
+info:
+  title: Cartwheel API
+  version: 1.0.0
+  summary: Tiny cart/checkout API used as the target codebase for the Closed Loop demo.
+  description: |
+    Cartwheel is the "product" whose community reports bugs in #cl-community.
+    It is intentionally small: in-memory data, no auth, no database.
+
+    ## Money
+    The **intended contract** (enforced by SHIPPING.md) is that every money field is
+    an integer number of **cents** in storage and a **number with exactly 2 decimals**
+    in responses (e.g. 29.99). Planted bug #2 violates this (float arithmetic).
+
+    ## Planted bugs (the main branch ships with these; tests don't catch them)
+    | id | Endpoint | Symptom | Correct behaviour |
+    |----|----------|---------|-------------------|
+    | BUG-1 coupon | GET /carts/{cartId}/total | `SAVE10` subtracts 10.00 | subtracts 10% of subtotal |
+    | BUG-2 rounding | GET /carts/{cartId}/total | totals like 29.999999999999996 | exact 2-decimal amounts (integer cents internally) |
+    | BUG-3 pagination | GET /products | last partial page missing: 12 products at limit=5 gives totalPages=2 and page=3 → 400 | totalPages = ceil(total/limit); page 3 returns the last 2 |
+
+    ## Coupons
+    | code | effect | rule |
+    |------|--------|------|
+    | SAVE10 | 10% off subtotal | — |
+    | FLAT5 | 5.00 off | only if subtotal >= 20.00 |
+    | FREESHIP | shipping = 0 | — |
+    Only one coupon per cart; applying a new one replaces the old.
+
+    ## Totals formula (correct)
+    discount = coupon applied to subtotal
+    taxable  = subtotal - discount
+    tax      = round_half_up(taxable * 0.08)      # 8% tax
+    shipping = 0 if FREESHIP or taxable >= 50.00 else 4.99
+    total    = taxable + tax + shipping
+  license:
+    name: MIT
+servers:
+  - url: http://localhost:3000
+    description: Local (PORT from .env, default 3000)
+
+tags:
+  - name: health
+  - name: products
+  - name: carts
+  - name: checkout
+
+paths:
+  /health:
+    get:
+      tags: [health]
+      operationId: getHealth
+      summary: Liveness check
+      responses:
+        "200":
+          description: OK
+          content:
+            application/json:
+              schema:
+                type: object
+                required: [status, version]
+                properties:
+                  status: { type: string, enum: [ok] }
+                  version: { type: string, example: "1.0.0" }
+
+  /products:
+    get:
+      tags: [products]
+      operationId: listProducts
+      summary: List products (paginated)
+      description: Pages are 1-based. BUG-3 lives here (totalPages uses floor instead of ceil). A page beyond totalPages returns 400 page_out_of_range.
+      parameters:
+        - name: page
+          in: query
+          schema: { type: integer, minimum: 1, default: 1 }
+        - name: limit
+          in: query
+          schema: { type: integer, minimum: 1, maximum: 50, default: 5 }
+      responses:
+        "200":
+          description: A page of products
+          content:
+            application/json:
+              schema: { $ref: "#/components/schemas/ProductPage" }
+        "400": { $ref: "#/components/responses/BadRequest" }
+
+  /products/{productId}:
+    get:
+      tags: [products]
+      operationId: getProduct
+      parameters:
+        - $ref: "#/components/parameters/ProductId"
+      responses:
+        "200":
+          description: The product
+          content:
+            application/json:
+              schema: { $ref: "#/components/schemas/Product" }
+        "404": { $ref: "#/components/responses/NotFound" }
+
+  /carts:
+    post:
+      tags: [carts]
+      operationId: createCart
+      summary: Create an empty cart
+      responses:
+        "201":
+          description: Created
+          content:
+            application/json:
+              schema: { $ref: "#/components/schemas/Cart" }
+
+  /carts/{cartId}:
+    get:
+      tags: [carts]
+      operationId: getCart
+      parameters:
+        - $ref: "#/components/parameters/CartId"
+      responses:
+        "200":
+          description: The cart
+          content:
+            application/json:
+              schema: { $ref: "#/components/schemas/Cart" }
+        "404": { $ref: "#/components/responses/NotFound" }
+
+  /carts/{cartId}/items:
+    post:
+      tags: [carts]
+      operationId: addItem
+      summary: Add a product (or increase its quantity)
+      parameters:
+        - $ref: "#/components/parameters/CartId"
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema: { $ref: "#/components/schemas/AddItemRequest" }
+      responses:
+        "200":
+          description: Updated cart
+          content:
+            application/json:
+              schema: { $ref: "#/components/schemas/Cart" }
+        "400": { $ref: "#/components/responses/BadRequest" }
+        "404": { $ref: "#/components/responses/NotFound" }
+
+  /carts/{cartId}/items/{productId}:
+    delete:
+      tags: [carts]
+      operationId: removeItem
+      parameters:
+        - $ref: "#/components/parameters/CartId"
+        - $ref: "#/components/parameters/ProductId"
+      responses:
+        "200":
+          description: Updated cart
+          content:
+            application/json:
+              schema: { $ref: "#/components/schemas/Cart" }
+        "404": { $ref: "#/components/responses/NotFound" }
+
+  /carts/{cartId}/coupon:
+    post:
+      tags: [carts]
+      operationId: applyCoupon
+      summary: Apply a coupon (replaces any existing one)
+      parameters:
+        - $ref: "#/components/parameters/CartId"
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              required: [code]
+              properties:
+                code: { type: string, example: SAVE10 }
+      responses:
+        "200":
+          description: Updated cart
+          content:
+            application/json:
+              schema: { $ref: "#/components/schemas/Cart" }
+        "400":
+          description: Unknown coupon or rule not met
+          content:
+            application/json:
+              schema: { $ref: "#/components/schemas/Error" }
+        "404": { $ref: "#/components/responses/NotFound" }
+    delete:
+      tags: [carts]
+      operationId: removeCoupon
+      parameters:
+        - $ref: "#/components/parameters/CartId"
+      responses:
+        "200":
+          description: Updated cart
+          content:
+            application/json:
+              schema: { $ref: "#/components/schemas/Cart" }
+
+  /carts/{cartId}/total:
+    get:
+      tags: [carts]
+      operationId: getCartTotal
+      summary: Price breakdown
+      description: BUG-1 and BUG-2 live here.
+      parameters:
+        - $ref: "#/components/parameters/CartId"
+      responses:
+        "200":
+          description: Totals
+          content:
+            application/json:
+              schema: { $ref: "#/components/schemas/Totals" }
+              example:
+                subtotal: 40.00
+                discount: 4.00
+                tax: 2.88
+                shipping: 4.99
+                total: 43.87
+                coupon: SAVE10
+        "404": { $ref: "#/components/responses/NotFound" }
+
+  /carts/{cartId}/checkout:
+    post:
+      tags: [checkout]
+      operationId: checkout
+      summary: Turn the cart into an order
+      parameters:
+        - $ref: "#/components/parameters/CartId"
+      responses:
+        "201":
+          description: Order created; cart is emptied
+          content:
+            application/json:
+              schema: { $ref: "#/components/schemas/Order" }
+        "400":
+          description: Empty cart
+          content:
+            application/json:
+              schema: { $ref: "#/components/schemas/Error" }
+        "404": { $ref: "#/components/responses/NotFound" }
+
+components:
+  parameters:
+    CartId:
+      name: cartId
+      in: path
+      required: true
+      schema: { type: string, example: "c_1" }
+    ProductId:
+      name: productId
+      in: path
+      required: true
+      schema: { type: string, example: "p_1" }
+
+  responses:
+    NotFound:
+      description: Not found
+      content:
+        application/json:
+          schema: { $ref: "#/components/schemas/Error" }
+    BadRequest:
+      description: Invalid input
+      content:
+        application/json:
+          schema: { $ref: "#/components/schemas/Error" }
+
+  schemas:
+    Money:
+      type: number
+      description: Amount in dollars with exactly 2 decimals in responses (stored as integer cents).
+      example: 19.99
+    Product:
+      type: object
+      required: [id, name, price]
+      properties:
+        id: { type: string, example: p_1 }
+        name: { type: string, example: Mechanical keyboard }
+        price: { $ref: "#/components/schemas/Money" }
+    ProductPage:
+      type: object
+      required: [items, page, limit, total, totalPages]
+      properties:
+        items:
+          type: array
+          items: { $ref: "#/components/schemas/Product" }
+        page: { type: integer }
+        limit: { type: integer }
+        total: { type: integer, description: Total number of products }
+        totalPages: { type: integer }
+    CartItem:
+      type: object
+      required: [productId, name, unitPrice, qty, lineTotal]
+      properties:
+        productId: { type: string }
+        name: { type: string }
+        unitPrice: { $ref: "#/components/schemas/Money" }
+        qty: { type: integer, minimum: 1 }
+        lineTotal: { $ref: "#/components/schemas/Money" }
+    Cart:
+      type: object
+      required: [id, items, coupon]
+      properties:
+        id: { type: string }
+        items:
+          type: array
+          items: { $ref: "#/components/schemas/CartItem" }
+        coupon:
+          type: [string, "null"]
+          example: SAVE10
+    AddItemRequest:
+      type: object
+      required: [productId]
+      properties:
+        productId: { type: string }
+        qty: { type: integer, minimum: 1, maximum: 99, default: 1 }
+    Totals:
+      type: object
+      required: [subtotal, discount, tax, shipping, total, coupon]
+      properties:
+        subtotal: { $ref: "#/components/schemas/Money" }
+        discount: { $ref: "#/components/schemas/Money" }
+        tax: { $ref: "#/components/schemas/Money" }
+        shipping: { $ref: "#/components/schemas/Money" }
+        total: { $ref: "#/components/schemas/Money" }
+        coupon: { type: [string, "null"] }
+    Order:
+      type: object
+      required: [id, cartId, items, totals, createdAt]
+      properties:
+        id: { type: string, example: o_1 }
+        cartId: { type: string }
+        items:
+          type: array
+          items: { $ref: "#/components/schemas/CartItem" }
+        totals: { $ref: "#/components/schemas/Totals" }
+        createdAt: { type: string, format: date-time }
+    Error:
+      type: object
+      required: [error]
+      properties:
+        error: { type: string, example: cart_not_found }
+        message: { type: string }
