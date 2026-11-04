@@ -20,7 +20,7 @@
 | M3 | Rooms (via template) | ✅ done (Nov 4): template v1 live, 3 agents + roles, allow-lists verified (cl-fixer ran npm test: 21 passed) |
 | M4 | Loop works once (D1) | ✅ done (Nov 4): LOOP-1 closed end to end in **11 min** (report 22:27 → reply in the reporter's own Discord thread 22:38), 1 human message, PR #2 merged `6f7e435`, 1 human message; findings F1–F6 in D-019 |
 | M5 | Template | ✅ done (Nov 5): fresh `cw` run reproduced agents, rooms, roles, docs, answers (D-028) |
-| M6 | All scenarios D1–D5 | ✅ D1, D2, D3, D5 verified with a real reporter (Nov 5); D4 role swap optional |
+| M6 | All scenarios D1–D5 | ✅ D1, D2, D3, D5 verified with a separate customer account (Nov 5); D4 role swap optional |
 | M7 | README + video | 🟡 README done; video next |
 | M8 | Submitted | ⬜ |
 
@@ -38,7 +38,7 @@
 | Wispr Flow | **not installed** |
 | Switch version | Console v0.40.1 (released 2026-10-21); server version: check Console → About after setup |
 | Target app / repo | **Cartwheel**: https://github.com/Sumit-Saurabh98/cartwheel (public, tag `v1.0.0-planted`, labels from-community/loop/severity:*, CI green) |
-| Discord server | **Cartwheel Community**, bot **Cartwheel Switch**, connected in Console as `Discord` ✅. Reporter = a friend (D-015) |
+| Discord server | **Cartwheel Community**, bot **Cartwheel Switch**, connected in Console as `Discord` ✅. Reporter = "Monika", the user's second Discord account (D-031) |
 
 ## Log
 
@@ -53,7 +53,7 @@
 - Local Switch server **running** (Console v0.40.1, Mattermost 11.9.0 container on 127.0.0.1:58049, about 190 MB). Claude Code provider: Signed in. Auto-created agent: `switch-buddy-admin`. System memory 57% free after start.
 - Built **Cartwheel** (`cartwheel/`): Express 5 API per openapi.yaml, 21 Vitest tests (all pass), SHIPPING.md (8 review rules), README, MIT license, CI workflow. `scripts/check-bugs.mjs` confirms **3/3 planted bugs present**; with reference fixes in a scratch copy it reports 0/3 and tests stay 21/21. Wrote `scripts/setup-demo-repo.sh` and `scripts/reset-demo.sh`.
 - Pushed Cartwheel to **github.com/Sumit-Saurabh98/cartwheel** (repo already existed empty; the setup script now handles that). Commit b793fb5, tag `v1.0.0-planted`, 5 custom labels, **CI passed on first run**.
-- Discord connected (server Cartwheel Community, bot Cartwheel Switch). Friend will play the reporter (D-015).
+- Discord connected (server Cartwheel Community, bot Cartwheel Switch). Reporter role: see D-031 (it's the user's second account).
 - Wrote `switch/closed-loop.template.yaml` (v2, D-014): agents cl-support/cl-fixer/cl-reviewer, rooms cl-community (Discord, public) + cl-eng (Mattermost, private), group with 2 links, roles fixer/reviewer, docs known-issues + loop-ledger, 3 github references, kickoffs. Structural check: no problems.
 - First import failed: `RoomSpec references` validation error. Traced to a Switch core bug in v2 `_choose` (D-016). Converted the template to v1 (identical content, verified). Possible Track 03 issue/PR (side session `switch-core-fix-v2-templ` started).
 - **v1 template imported successfully.** Discord #cl-community: cl-support introduced itself. Mattermost cl-eng: cl-reviewer assumed `reviewer`, cl-fixer assumed `fixer`, support confirmed it's the bridge. Agent dirs: `~/.switch/agents/localhost-58048/<agent>` = the repo clone itself (cl-fixer cloned + `npm install --ignore-scripts`; support/reviewer dirs still empty). **Blocker**: Claude Code Auto mode blocks `npm test` for cl-fixer.

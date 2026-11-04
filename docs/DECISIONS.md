@@ -86,7 +86,7 @@
 - **Local lint**: Switch's linter needs the full server codebase, so a custom structural check was run instead (placeholders, keys, required fields: no problems). Console validates again on import.
 - **Status**: accepted
 
-### D-015 · 2026-11-04 · The reporter in the demo is a real friend, not a second account
+### D-015 · 2026-11-04 · The reporter in the demo is a real friend, not a second account  _(**corrected by D-031**: it's the user's second account)_
 - **Why**: The user prefers not to create another Discord account; a real second person also reads as more authentic on video. The friend joins the **Cartwheel Community** Discord server.
 - **Implication**: schedule a ~20-min recording slot with the friend on Nov 6 (rehearsal) and Nov 7 (final). Backup: the friend's messages can be sent from their phone while you screen-record.
 - **Status**: accepted
@@ -151,8 +151,8 @@
 - **Clarified for the user**: nothing is deleted per loop (loops accumulate history on purpose); between demo takes we only *reset* (close, relabel, move main to the tag, `!reset`, edit docs back), never delete.
 - **Status**: accepted
 
-### D-023 · 2026-11-05 · Rehearsal 1 with a real reporter (Monika): results and findings
-**Result**: passed end to end with a second person. Monika (Discord) reported at 23:56 IST → cl-support filed **issue #3 as LOOP-2** → fixer wrote an **exact** `toBe` test (F3 works), which also exposed the float total → **PR #4** fixed coupon + money math in cents (22/22, CI green) → APPROVE-RECOMMENDED → `approve LOOP-2` → merged `97e1a4a` 18:33:51Z, issue closed → RESOLVED → Monika got her reply in Discord (confirmed by the user). check-bugs on main: BUG-1 + BUG-2 fixed, **1/3 left (pagination)**. cl-support created its own docs with no 403 (D-022 works).
+### D-023 · 2026-11-05 · Rehearsal 1 with a separate reporter account (Monika): results and findings
+**Result**: passed end to end with a separate reporter account (see D-031). Monika (Discord) reported at 23:56 IST → cl-support filed **issue #3 as LOOP-2** → fixer wrote an **exact** `toBe` test (F3 works), which also exposed the float total → **PR #4** fixed coupon + money math in cents (22/22, CI green) → APPROVE-RECOMMENDED → `approve LOOP-2` → merged `97e1a4a` 18:33:51Z, issue closed → RESOLVED → Monika got her reply in Discord (confirmed by the user). check-bugs on main: BUG-1 + BUG-2 fixed, **1/3 left (pagination)**. cl-support created its own docs with no 403 (D-022 works).
 
 | # | Finding | Fix |
 |---|---|---|
@@ -180,7 +180,7 @@
 - **Report**: Monika, "I can't find the coffee mug… page 2 of 2 only shows up to Notebook" → issue **#5 / LOOP-3** → **PR #6** (`Math.floor` → `Math.ceil`, test failed first) → APPROVE-RECOMMENDED.
 - **Reject**: the user replied `reject LOOP-3: … page=4 must still return 400 page_out_of_range, and pages 1-3 together must contain all 12 products exactly once.` The reviewer relayed CHANGES; the fixer pushed a **2nd commit on the same PR** (`a0409fd`) with exactly those two tests; 25/25; CI green; new APPROVE-RECOMMENDED.
 - **Approve**: `approve LOOP-3` + Allow → squash-merged `60b677f` 20:49:09Z, issue #5 closed, CI green.
-- **State**: main = `60b677f`; **check-bugs 0/3**; 25 tests. Every planted bug was reported by a real user and fixed through the loop (LOOP-2 fixed BUG-1 + BUG-2, LOOP-3 fixed BUG-3).
+- **State**: main = `60b677f`; **check-bugs 0/3**; 25 tests. Every planted bug was reported from the community channel (by the "Monika" account) and fixed through the loop (LOOP-2 fixed BUG-1 + BUG-2, LOOP-3 fixed BUG-3).
 - **Reply**: Monika got the "LOOP-3 is fixed" reply in her coffee-mug thread (confirmed by the user).
 - **Scenario coverage**: D1 ✅ (×2), D2 ✅, D3 ✅, D5 ✅; D4 (role swap) not tried, optional.
 - **Status**: accepted
@@ -211,6 +211,12 @@
 - **Fix**: support + fixer instructions now require every `gh` command to be **one line** (no newlines, `$`, backticks, `$( )`): long text is written to `.loop/*.md` with the file tool and passed with `--body-file`; commits use a one-line `-m`. `setup-agent-workspaces.sh` adds `Edit/Write(.loop/**)` to the support and fixer allow-lists and git-ignores `.loop/`. Template re-checked; paste-ready `docs/live/cl-support.instructions.txt` + `docs/live/cl-fixer.instructions.txt` regenerated.
 - **Lesson for the README**: an allow-list only helps if the agent's command shape matches it. Make the instructions produce matchable commands.
 - **Status**: accepted (verify on the retake: the issue and PR get created without a classifier decision)
+
+### D-031 · 2026-11-05 · Correction: "Monika" is the user's second Discord account, not a friend
+- **Fact** (from the user, 2026-11-05): the reporter "Monika" is the user's own second Discord account. Earlier notes (D-015, D-023, D-026) and drafts called her a friend or a real user; that was wrong.
+- **Fixed wording**: README ("a customer account… a second account I use for the demo"), SUBMISSION.md "Teammates" (I play both sides), VIDEO.md voiceover (no "real user" claim), PRD/PLAN/PROGRESS. Historic decision titles are marked as corrected rather than deleted.
+- **Why it matters**: judges read the README and form; claims about who took part must be accurate. The workflow itself is unchanged: a separate Discord identity in the public room, the maintainer in Mattermost.
+- **Status**: accepted
 
 ---
 

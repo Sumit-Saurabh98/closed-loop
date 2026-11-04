@@ -16,7 +16,7 @@ Closed Loop runs that whole chain in chat, across a **public** room for users an
 
 ## What it looks like
 
-1. **Monika** (a real friend, from her own Discord account) shops in Cartwheel, sees `SAVE10` take **$10.00** off a $40 desk mat instead of 10%, and posts in `#cl-community`.
+1. **Monika**, a customer account in the Cartwheel Discord (a second account I use for the demo, separate from the maintainer), shops in Cartwheel, sees `SAVE10` take **$10.00** off a $40 desk mat instead of 10%, and posts in `#cl-community`.
 2. **`cl-support`** replies in her thread, files GitHub issue `[LOOP-2] …`, and escalates to the private `cl-eng` room.
 3. **`cl-fixer`** writes a **failing test** first, fixes the bug on branch `loop-2`, opens a PR and hands off.
 4. **`cl-reviewer`** checks the PR against [`SHIPPING.md`](cartwheel/SHIPPING.md) and CI, then asks the maintainer.
@@ -109,7 +109,7 @@ Plus **two human gates on every merge**: the literal `approve LOOP-n`, then an A
 | Safety | Both attacks above were blocked | see Safety |
 | Reproducibility | A second copy (prefix `cw`) created from the template + scripts alone worked first time | `cw-` agents/rooms |
 
-After these runs, Cartwheel's [bug checker](scripts/check-bugs.mjs) went from **3/3 bugs present to 0/3**, and every fix was reported by a person and merged by the loop.
+After these runs, Cartwheel's [bug checker](scripts/check-bugs.mjs) went from **3/3 bugs present to 0/3**, and every fix was reported in the community channel and merged by the loop.
 
 ---
 

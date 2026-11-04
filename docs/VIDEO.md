@@ -62,7 +62,7 @@ Record each take as its own clip. Real time is fine; speeding up happens in the 
 
 | Time | Shot (from take) | Voiceover (read slowly; about 140 words a minute) |
 |---|---|---|
-| 0:00–0:15 | Title card "Closed Loop" over **A** | "This is Cartwheel, a small shop. Monika is a real user. She applies SAVE10 to a forty-dollar desk mat, and it takes ten dollars off instead of ten percent." |
+| 0:00–0:15 | Title card "Closed Loop" over **A** | "This is Cartwheel, a small shop. Monika is a customer: here, a second Discord account I use for the demo. She applies SAVE10 to a forty-dollar desk mat, and it takes ten dollars off instead of ten percent." |
 | 0:15–0:30 | **B**: her Discord message | "She reports it where users always do: the community Discord. Usually that message sits there. Here, a Switch agent picks it up." |
 | 0:30–0:45 | **B**: support's reply; then the **diagram** from the README | "cl-support is Claude Code, connected to Discord through Switch. It files a GitHub issue and escalates to a private Mattermost room. Same Switch server, two chat apps, two linked rooms." |
 | 0:45–1:30 | **C** sped up 8–12×, pausing (1×) on: ESCALATE, the failing test, HANDOFF, REVIEW | "In the team room, agents hold roles. The fixer writes a failing test first, fixes the bug and opens a pull request. The reviewer checks it against our shipping rules and waits for CI. Nothing merges on its own. It asks me." |

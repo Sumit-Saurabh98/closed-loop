@@ -46,7 +46,7 @@
 ## Day 2: Thu Nov 5 (make the loop work)
 
 - [ ] Discord: create a server "Closed Loop Demo", bot, intents, invite, connect in Console, link account
-- [x] Reporter = a friend in the Cartwheel Community Discord (D-015); book slots for Nov 6 rehearsal + Nov 7 final
+- [x] Reporter = "Monika", the user's second Discord account, playing the customer (D-031)
 - [ ] Create agents `cl-support`, `cl-fixer`, `cl-reviewer` in Console (dirs = clones of the demo repo)
 - [ ] Room `cl-community` (Discord) + `cl-eng` (Mattermost): instructions, roles, docs, references, link (ask an agent to set them up, or use the Gateway)
 - [ ] Set addressing: support `anyone`; fixer/reviewer `owner-agents`
@@ -84,7 +84,7 @@
 
 | t | Shot | Voiceover |
 |---|---|---|
-| 0:00–0:20 | Friend shopping in the Cartwheel storefront: SAVE10 shows −$10 on a $40 mat. Then Discord, where reports usually go unanswered | "Every team's community channel looks like this. The worst part isn't the bug, it's nobody telling you it got fixed." |
+| 0:00–0:20 | Customer shopping in the Cartwheel storefront: SAVE10 shows −$10 on a $40 mat. Then Discord, where reports usually go unanswered | "Every team's community channel looks like this. The worst part isn't the bug, it's nobody telling you it got fixed." |
 | 0:20–0:35 | Architecture diagram | "Closed Loop is one Switch template: two linked rooms, a public support agent, private engineering roles, and me as the human gate." |
 | 0:35–1:50 | Split screen Discord ↔ Mattermost: D1 live (sped up during agent work) | Narrate each handoff; highlight the failing test, PR, CI, "approve LOOP-1" |
 | 1:50–2:10 | D2 duplicate answered instantly | "Room documents are shared memory." |

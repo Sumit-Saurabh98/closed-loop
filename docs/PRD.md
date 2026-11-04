@@ -133,7 +133,7 @@ Every step happens in chat, visible to the right audience. The state of every lo
 | Risk | Mitigation |
 |---|---|
 | Discord bridge setup eats time | Fallback: both rooms on Mattermost (still two rooms + link) |
-| Solo, so who is "the reporter"? | **A friend** joins the Cartwheel Community Discord (D-015); book recording slots with them |
+| Solo, so who is "the reporter"? | A second Discord account of the maintainer ("Monika") plays the customer (D-031) |
 | Agent non-determinism in the live demo | Planted bugs with precise tests; rehearse; record several takes |
 | Token cost (3 Claude Code sessions) | Smaller model for support/reviewer via `model:`; keep sessions short (`!compact`) |
 | Template keys behave differently from docs | Build by hand in Console first, then *Capture as template* and diff |
