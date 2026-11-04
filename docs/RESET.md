@@ -39,8 +39,8 @@ exact cents math, and money asserted with exact equality (`toBe(43.87)`), never
    toBeCloseTo or toFixed, which hide float errors (2)
 ```
 
-**cl-support**: replace the **whole** Agent instructions text with the contents of
-[`docs/live/cl-support.instructions.txt`](live/cl-support.instructions.txt) (generated from the template with `cl`, your repo URL and `user` filled in). Select all in the box, delete, paste, save.
+**cl-support** and **cl-fixer** (updated again for D-030): replace the **whole** Agent instructions text with the contents of
+[`docs/live/cl-support.instructions.txt`](live/cl-support.instructions.txt) and [`docs/live/cl-fixer.instructions.txt`](live/cl-fixer.instructions.txt) respectively (generated from the template with `cl`, your repo URL and `user` filled in). Select all in the box, delete, paste, save.
 
 - **Verify**: re-open each agent's page and check the new text is saved.
 
@@ -89,6 +89,11 @@ Ask cl-support in `cl-eng`:
 - 🧑 `./scripts/run-shop.sh` (or your running shop): Desk mat + SAVE10 shows **−$10.00 / $37.39**.
 
 ---
+
+## If an agent won't reset
+Seen 2026-11-05: `!reset @cl-support` (sent 4×) left it stuck for 5+ minutes. It had **five** 4-hour-old Claude Code sessions alive at once, plus leaked old fixer, reviewer and `cw-` sessions eating swap.
+**Fix**: quit Switch Console with **Cmd+Q** and reopen it (the server, rooms and Mattermost keep running in Docker). That ends every agent session; each agent starts a fresh one the next time it's addressed (the first reply takes about a minute). Send `!reset` **once** per agent and wait for its reconnect reply before sending anything else.
+Check from a terminal: `pgrep -fl "\.local/bin/claude"` lists live agent sessions.
 
 ## Known open items (2026-11-04)
 - CI for `84667ef` stayed **queued** for 10+ minutes. Check GitHub → Actions before relying on CI in the next run; the reviewer must not approve on pending CI.

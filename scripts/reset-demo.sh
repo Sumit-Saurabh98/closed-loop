@@ -64,15 +64,17 @@ done
 
 echo "==> B2 Archive every loop issue (label loop -> demo-archive)"
 run gh label create demo-archive --repo "$REPO" --color BFBFBF --description "Issue from an earlier demo run" --force
-for issue in $(gh issue list --repo "$REPO" --state all --label loop --limit 200 --json number --jq '.[].number'); do
+# Remember the numbers: GitHub's label search can lag right after a relabel (D-029)
+LOOP_IDS=$(gh issue list --repo "$REPO" --state all --label loop --limit 200 --json number --jq '.[].number' | tr '\n' ' ')
+for issue in $LOOP_IDS; do
   echo "    issue #$issue"; run gh issue edit "$issue" --repo "$REPO" --remove-label loop --add-label demo-archive
 done
 
 if [ "$DELETE_ARCHIVED" = yes ]; then
   echo "==> B2b Permanently delete demo-archive issues"
-  # demo-archive issues, plus loop issues (in a dry run the step above didn't relabel them)
+  # issues already labelled demo-archive, plus the loop issues archived just above (by number, not by search)
   ids=$( { gh issue list --repo "$REPO" --state all --label demo-archive --limit 200 --json number --jq '.[].number'
-           gh issue list --repo "$REPO" --state all --label loop --limit 200 --json number --jq '.[].number'; } | sort -nu | tr '\n' ' ')
+           for i in $LOOP_IDS; do echo "$i"; done; } | sort -nu | tr '\n' ' ')
   if [ -z "${ids// /}" ]; then
     echo "    none"
   else

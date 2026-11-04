@@ -20,6 +20,7 @@ It's a Switch setup where a public **support agent** in Discord turns a user's b
 | `docs/DECISIONS.md` | Why things are the way they are + open questions |
 | `docs/SUBMISSION.md` | Every submission-form field + draft answers |
 | `docs/RESET.md` | Demo reset runbook (before every take) |
+| `docs/VIDEO.md` | Video runbook: pre-flight, shot list, voiceover script, edit, upload |
 | `docs/api/openapi.yaml` | cartwheel HTTP API (source of truth for the app) |
 | `docs/api/schemas.md` | Handoff grammar, ledger schema, GitHub conventions, template draft |
 

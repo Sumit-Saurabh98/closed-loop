@@ -186,6 +186,7 @@ docs/                              PRD · ARCHITECTURE · DECISIONS (every choic
 - **Version 2 templates can't create inline `references:`** in v0.40.x: `_choose` in `template_v2.py` reads any list whose items all have a `value` key as an if/value choice. This template uses version 1. A fix with tests is prepared for Switch core.
 - **An agent can only edit room documents it created**, so `cl-support` creates its own documents instead of the template.
 - **Claude Code Auto mode blocks `npm test`** for agents until you add an allow-list. Least-privilege lists beat Bypass permissions.
+- **Allow-list rules only match one-line commands.** A multi-line `gh issue create --body "…"` never matched `Bash(gh issue create:*)` and fell through to Auto mode's judgment, which once refused mid-demo. The agents now write long text to `.loop/*.md` and pass `--body-file`, so every `gh` call matches its rule.
 - **Kickoffs run before workspace setup**: one `!reset` per agent afterwards.
 
 ## License

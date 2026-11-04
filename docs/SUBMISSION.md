@@ -32,7 +32,7 @@ Draft:
 - Track 1 & 2: *public repository, with a README that explains how to set it up*
 - Track 3: *your main pull request*
 - "This is what your project gets listed and opened by."
-- Draft: `https://github.com/Sumit-Saurabh98/closed-loop` (**to create and push**; the demo app repo `Sumit-Saurabh98/cartwheel` is linked from its README)
+- **Final**: `https://github.com/Sumit-Saurabh98/closed-loop` (public, published 2026-11-05; README links the demo repo `Sumit-Saurabh98/cartwheel`)
 
 ### 5. Demo video * (URL)
 - *Keep it under 3 minutes. Host it on YouTube or Loom, public or unlisted.*

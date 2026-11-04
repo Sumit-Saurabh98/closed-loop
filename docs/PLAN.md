@@ -79,6 +79,8 @@
 ---
 
 ## Demo video script (≤3:00)
+> **Superseded by [`VIDEO.md`](VIDEO.md)** (pre-flight, shot list, voiceover script, iMovie steps, upload). The table below is the original draft.
+
 
 | t | Shot | Voiceover |
 |---|---|---|

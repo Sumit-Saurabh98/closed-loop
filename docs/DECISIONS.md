@@ -200,6 +200,18 @@
 - **Cleanup** (optional, user): delete the `cw-` agents and rooms in Console when no longer needed (frees memory).
 - **Status**: accepted
 
+### D-029 · 2026-11-05 · Reset script bug: label search lag skipped an issue
+- **What happened**: in the pre-video reset, `--delete-archived` deleted #1 and #3 but **missed #5**. The script relabelled #3/#5 (`loop` → `demo-archive`) and then re-queried GitHub by label; the search index hadn't caught up on #5.
+- **Fix**: `reset-demo.sh` remembers the `loop` issue numbers (`LOOP_IDS`) before relabelling and deletes by number, plus anything already labelled `demo-archive`. Dry run after the fix lists #5. The user deletes #5 by re-running the script (main was already at the tag, so that run only deletes).
+- **Status**: accepted
+
+### D-030 · 2026-11-05 · gh commands must be one line (allow-list rules never matched multi-line ones)
+- **What happened** (video retake, take B): cl-support's `gh issue create … --body "## Steps\n…"` was **denied** by Claude Code's Auto mode classifier ("External System Writes"), so it told Monika it couldn't file yet.
+- **Root cause**: in the transcripts, the **same multi-line command** succeeded 4 times (issues #1, #3, #5, #7) and failed once. The allow rule `Bash(gh issue create:*)` never matched multi-line commands, so every one fell through to the classifier, which is a judgment call and isn't deterministic.
+- **Fix**: support + fixer instructions now require every `gh` command to be **one line** (no newlines, `$`, backticks, `$( )`): long text is written to `.loop/*.md` with the file tool and passed with `--body-file`; commits use a one-line `-m`. `setup-agent-workspaces.sh` adds `Edit/Write(.loop/**)` to the support and fixer allow-lists and git-ignores `.loop/`. Template re-checked; paste-ready `docs/live/cl-support.instructions.txt` + `docs/live/cl-fixer.instructions.txt` regenerated.
+- **Lesson for the README**: an allow-list only helps if the agent's command shape matches it. Make the instructions produce matchable commands.
+- **Status**: accepted (verify on the retake: the issue and PR get created without a classifier decision)
+
 ---
 
 ## Open questions (resolve and turn into decisions)

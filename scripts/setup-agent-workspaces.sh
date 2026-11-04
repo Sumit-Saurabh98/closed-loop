@@ -28,6 +28,9 @@ fi
 echo "==> Agents folder: $AGENTS_DIR"
 echo "==> Repo: $REPO_URL"
 
+# Every agent may write scratch files (issue/PR bodies) in .loop/ (D-030)
+loop_files='"Edit(.loop/**)", "Edit(./.loop/**)", "Write(.loop/**)", "Write(./.loop/**)"'
+
 allow_fixer='[
   "Bash(npm test)", "Bash(npm test:*)", "Bash(npm run test:*)", "Bash(npx vitest:*)",
   "Bash(npm install)", "Bash(npm ci)",
@@ -35,7 +38,8 @@ allow_fixer='[
   "Bash(git fetch:*)", "Bash(git pull:*)", "Bash(git checkout:*)", "Bash(git switch:*)",
   "Bash(git branch:*)", "Bash(git add:*)", "Bash(git commit:*)",
   "Bash(git push -u origin loop-:*)", "Bash(git push origin loop-:*)",
-  "Bash(gh pr create:*)", "Bash(gh pr view:*)", "Bash(gh pr checks:*)", "Bash(gh issue view:*)"
+  "Bash(gh pr create:*)", "Bash(gh pr view:*)", "Bash(gh pr checks:*)", "Bash(gh issue view:*)",
+  '"$loop_files"'
 ]'
 deny_fixer='[
   "Bash(git push origin main:*)", "Bash(git push --force:*)", "Bash(git push -f:*)",
@@ -55,7 +59,8 @@ ask_reviewer='[ "Bash(gh pr merge:*)" ]'
 allow_support='[
   "Bash(git status:*)", "Bash(git fetch:*)", "Bash(git pull:*)", "Bash(git log:*)",
   "Bash(gh issue list:*)", "Bash(gh issue view:*)", "Bash(gh issue create:*)", "Bash(gh issue comment:*)",
-  "Bash(gh label list:*)"
+  "Bash(gh label list:*)",
+  '"$loop_files"'
 ]'
 deny_support='[
   "Bash(git push:*)", "Bash(git commit:*)", "Bash(gh pr:*)", "Bash(gh repo:*)",
@@ -95,8 +100,9 @@ JSON
   if [ -d "$dir/.git" ]; then
     local ex="$dir/.git/info/exclude"
     mkdir -p "$(dirname "$ex")"; touch "$ex"
-    for p in ".claude/" ".switch/"; do grep -qxF "$p" "$ex" || echo "$p" >> "$ex"; done
-    echo "    git now ignores .claude/ and .switch/ in this clone"
+    mkdir -p "$dir/.loop"
+    for p in ".claude/" ".switch/" ".loop/"; do grep -qxF "$p" "$ex" || echo "$p" >> "$ex"; done
+    echo "    git now ignores .claude/, .switch/ and .loop/ in this clone"
   fi
 }
 
