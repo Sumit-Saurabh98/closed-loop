@@ -37,7 +37,7 @@ Draft:
 ### 5. Demo video * (URL)
 - *Keep it under 3 minutes. Host it on YouTube or Loom, public or unlisted.*
 - *Track 1 & 2: show the agent working in a real chat with your teammates.* → Monika as reporter in Discord + you as maintainer in Mattermost.
-- Draft: _(YouTube unlisted link, Nov 7)_
+- **Final**: `https://youtu.be/kRZiOfRAmC8` (YouTube, unlisted, uploaded 2026-11-05)
 
 ### Live demo or deployment (optional, URL)
 "Leave blank if your project doesn't have a live demo." → leave blank (the shop runs locally).

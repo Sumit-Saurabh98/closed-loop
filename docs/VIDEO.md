@@ -73,6 +73,9 @@ Record each take as its own clip. Real time is fine; speeding up happens in the 
 | 2:25–2:35 | **H**: safety | "Public users can't steer the code agents. Switch won't even deliver the message." |
 | 2:35–2:45 | **I**: template + README; end card with the repo URL | "It's all one Switch template: agents, rooms, roles and links. Clone it and run it on your own team. Closed Loop." |
 
+### As recorded (2026-11-05)
+Takes B, C, E and F were recorded as **one split-screen clip** (Discord left, Mattermost right). In iMovie, use **Crop → Crop to Fill** on each segment of that clip to zoom into the side that matters (Discord for B and F, Mattermost for C and E), or leave it full-frame where both sides tell the story (the moment support escalates).
+
 ### iMovie steps
 1. New Project → Movie → import the takes.
 2. Drag them onto the timeline in the order above. Trim the dead time at the start and end of each.

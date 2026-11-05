@@ -3,7 +3,7 @@
 **From a bug report in a community chat to a reviewed, merged fix, and a reply to the person who reported it. People and AI agents work together through [Switch](https://github.com/sandbox-quantum/switch).**
 
 > 🏁 Flip the Switch Hackathon · Track 01: Best Business Workflow
-> 🎥 **Demo video:** _link coming Nov 7_
+> 🎥 **Demo video (under 3 min):** [https://youtu.be/kRZiOfRAmC8](https://youtu.be/kRZiOfRAmC8)
 > 🛒 Demo product: [Sumit-Saurabh98/cartwheel](https://github.com/Sumit-Saurabh98/cartwheel), a small cart API + React shop with three planted bugs
 
 ---
